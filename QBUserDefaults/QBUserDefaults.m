@@ -30,6 +30,22 @@
         // Initialize
         self.observingKeys = [NSMutableArray array];
         
+        // Register defaults
+        NSDictionary *defaults = [[self class] defaults];
+        
+        if (defaults && defaults.count > 0) {
+            NSMutableDictionary *modifiedDefaults = [NSMutableDictionary dictionary];
+            
+            for (NSString *key in [defaults allKeys]) {
+                [modifiedDefaults setObject:[defaults objectForKey:key]
+                                     forKey:[self defaultNameForKey:key]];
+            }
+            
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults registerDefaults:modifiedDefaults];
+            [userDefaults synchronize];
+        }
+        
         // Add observers to all properties
         unsigned int propertyCount;
         objc_property_t *properties = class_copyPropertyList(self.class, &propertyCount);
@@ -138,12 +154,6 @@
     // Port values from NSUserDefaults
     id value = [self objectForKey:key];
     
-    // Load default if value is nil
-    if (value == nil) {
-        value = [[[self class] defaults] objectForKey:key];
-    }
-    
-    // Set value to property if value is not nil
     if (value) {
         [self setValue:value forKeyPath:key];
     }
