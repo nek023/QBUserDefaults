@@ -10,6 +10,8 @@
 
 @interface QBUserDefaults : NSObject
 
++ (instancetype)standardUserDefaults;
+
 + (NSDictionary *)defaults;
 
 - (NSString *)defaultNameForKey:(NSString *)key;
