@@ -17,6 +17,18 @@
 
 @implementation QBUserDefaults
 
++ (instancetype)standardUserDefaults
+{
+    static dispatch_once_t onceToken = 0;
+    static QBUserDefaults* instance = nil;
+    
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    
+    return instance;
+}
+
 + (NSDictionary *)defaults
 {
     return nil;
